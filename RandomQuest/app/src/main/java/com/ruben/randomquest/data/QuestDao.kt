@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface QuestDao {
-    @Query("SELECT * FROM quests WHERE isCompleted = 0 AND (:category IS NULL OR category = :category) AND (:energyLevel IS NULL OR energyLevel = :energyLevel) ORDER BY RANDOM() LIMIT 1")
-    suspend fun getRandomQuest(category: QuestCategory?, energyLevel: EnergyLevel?): Quest?
+    @Query("SELECT * FROM quests WHERE isCompleted = 0 AND language = :language AND (:category IS NULL OR category = :category) AND (:energyLevel IS NULL OR energyLevel = :energyLevel) ORDER BY RANDOM() LIMIT 1")
+    suspend fun getRandomQuest(language: String, category: QuestCategory?, energyLevel: EnergyLevel?): Quest?
 
     @Query("SELECT * FROM quests WHERE isCompleted = 1 ORDER BY completedAt DESC")
     fun getCompletedQuests(): Flow<List<Quest>>

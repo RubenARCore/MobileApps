@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Случайно предизвикателство</string>
+    <string name="nav_home">Начало</string>
+    <string name="nav_profile">Профил</string>
+    <string name="stat_completions">Завършени</string>
+    <string name="stat_streak">Поредица</string>
+    <string name="filter_category">Филтър по категория</string>
+    <string name="filter_energy">Ниво на енергия</string>
+    <string name="btn_generate">ГЕНЕРИРАЙ</string>
+    <string name="btn_quest">КУЕСТ</string>
+    <string name="label_recently_completed">Наскоро завършени</string>
+    <string name="btn_reroll">Смени</string>
+    <string name="btn_complete">Завърши</string>
+    <string name="share_message">Току-що получих ново предизвикателство: %1$s! #RandomQuest</string>
+    <string name="title_progress">Твоят прогрес</string>
+    <string name="stat_total_quests">Общо куестове</string>
+    <string name="stat_current_streak">Текуща поредица</string>
+    <string name="label_history">История на куестовете</string>
+    <string name="empty_history">Все още нямаш завършени куестове. Да започваме!</string>
+    <string name="streak_days">%1$d дни</string>
+
+    <string name="cat_social">Социални</string>
+    <string name="cat_fitness">Фитнес</string>
+    <string name="cat_creative">Креативни</string>
+    <string name="cat_mindful">Осъзнатост</string>
+
+    <string name="energy_low">Ниско</string>
+    <string name="energy_medium">Средно</string>
+    <string name="energy_high">Високо</string>
+
+    <string name="settings_language">Език</string>
+    <string name="lang_en">English</string>
+    <string name="lang_bg">Български</string>
+</resources>

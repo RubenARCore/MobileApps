@@ -1,3 +1,34 @@
 <resources>
     <string name="app_name">Random Quest</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_profile">Profile</string>
+    <string name="stat_completions">Completions</string>
+    <string name="stat_streak">Streak</string>
+    <string name="filter_category">Filter by Category</string>
+    <string name="filter_energy">Energy Level</string>
+    <string name="btn_generate">GENERATE</string>
+    <string name="btn_quest">QUEST</string>
+    <string name="label_recently_completed">Recently Completed</string>
+    <string name="btn_reroll">Reroll</string>
+    <string name="btn_complete">Complete</string>
+    <string name="share_message">I just got a new quest: %1$s! #RandomQuest</string>
+    <string name="title_progress">Your Progress</string>
+    <string name="stat_total_quests">Total Quests</string>
+    <string name="stat_current_streak">Current Streak</string>
+    <string name="label_history">Quest History</string>
+    <string name="empty_history">No quests completed yet. Go get some!</string>
+    <string name="streak_days">%1$d Days</string>
+
+    <string name="cat_social">Social</string>
+    <string name="cat_fitness">Fitness</string>
+    <string name="cat_creative">Creative</string>
+    <string name="cat_mindful">Mindful</string>
+
+    <string name="energy_low">Low</string>
+    <string name="energy_medium">Medium</string>
+    <string name="energy_high">High</string>
+
+    <string name="settings_language">Language</string>
+    <string name="lang_en">English</string>
+    <string name="lang_bg">Bulgarian</string>
 </resources>

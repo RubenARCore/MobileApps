@@ -13,8 +13,8 @@ class QuestRepository(private val questDao: QuestDao) {
     
     fun getCompletedQuestsCount(): Flow<Int> = questDao.getCompletedQuestsCount()
 
-    suspend fun getRandomQuest(category: QuestCategory?, energyLevel: EnergyLevel?): Quest? {
-        return questDao.getRandomQuest(category, energyLevel)
+    suspend fun getRandomQuest(language: String, category: QuestCategory?, energyLevel: EnergyLevel?): Quest? {
+        return questDao.getRandomQuest(language, category, energyLevel)
     }
 
     suspend fun completeQuest(quest: Quest) {

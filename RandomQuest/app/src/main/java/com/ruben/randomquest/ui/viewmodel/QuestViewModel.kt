@@ -54,7 +54,10 @@ class QuestViewModel(private val repository: QuestRepository) : ViewModel() {
     fun generateQuest() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
+            val currentLanguage = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales().toLanguageTags()
+                .ifEmpty { "en" }.take(2)
             val quest = repository.getRandomQuest(
+                currentLanguage,
                 _uiState.value.selectedCategory,
                 _uiState.value.selectedEnergyLevel
             )

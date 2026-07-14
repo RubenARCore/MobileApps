@@ -1,7 +1,7 @@
 package com.ruben.randomquest
 
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,16 +10,18 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.navigation3.AdaptiveNavDisplay
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation3.NavEntry
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
 import androidx.room.Room
 import com.ruben.randomquest.data.AppDatabase
 import com.ruben.randomquest.data.QuestRepository
@@ -74,8 +76,8 @@ fun RandomQuestApp(viewModel: QuestViewModel) {
                         backStack.add(QuestNavKey.Generator)
                     }
                 },
-                icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                label = { Text("Home") }
+                icon = { Icon(Icons.Default.Home, contentDescription = stringResource(R.string.nav_home)) },
+                label = { Text(stringResource(R.string.nav_home)) }
             )
             item(
                 selected = currentKey == QuestNavKey.Profile,
@@ -85,24 +87,23 @@ fun RandomQuestApp(viewModel: QuestViewModel) {
                         backStack.add(QuestNavKey.Profile)
                     }
                 },
-                icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-                label = { Text("Profile") }
+                icon = { Icon(Icons.Default.Person, contentDescription = stringResource(R.string.nav_profile)) },
+                label = { Text(stringResource(R.string.nav_profile)) }
             )
         }
     ) {
-        AdaptiveNavDisplay(
+        NavDisplay(
             backStack = backStack,
-            onBack = { if (backStack.size > 1) backStack.removeLast() },
-            modifier = Modifier.fillMaxSize()
-        ) { key ->
-            when (key) {
-                is QuestNavKey.Generator -> NavEntry(key) {
+            onBack = { if (backStack.size > 1) backStack.removeAt(backStack.size - 1) },
+            modifier = Modifier.fillMaxSize(),
+            entryProvider = entryProvider {
+                entry<QuestNavKey.Generator> {
                     QuestGeneratorScreen(viewModel = viewModel)
                 }
-                is QuestNavKey.Profile -> NavEntry(key) {
+                entry<QuestNavKey.Profile> {
                     ProfileScreen(viewModel = viewModel)
                 }
             }
-        }
+        )
     }
 }

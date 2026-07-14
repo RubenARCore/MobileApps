@@ -25,12 +25,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.ruben.randomquest.R
 import com.ruben.randomquest.model.EnergyLevel
 import com.ruben.randomquest.model.Quest
 import com.ruben.randomquest.model.QuestCategory
+import com.ruben.randomquest.ui.components.StatCard
 import com.ruben.randomquest.ui.viewmodel.QuestViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -54,23 +57,29 @@ fun QuestGeneratorScreen(viewModel: QuestViewModel) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                StatCard(label = "Completions", value = completedCount.toString())
-                StatCard(label = "Streak", value = "${uiState.streak} 🔥")
+                StatCard(label = stringResource(R.string.stat_completions), value = completedCount.toString())
+                StatCard(label = stringResource(R.string.stat_streak), value = "${uiState.streak} 🔥")
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // Filters
-            Text("Filter by Category", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.filter_category), style = MaterialTheme.typography.titleMedium)
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
                 QuestCategory.entries.forEach { category ->
+                    val categoryLabel = when (category) {
+                        QuestCategory.SOCIAL -> stringResource(R.string.cat_social)
+                        QuestCategory.FITNESS -> stringResource(R.string.cat_fitness)
+                        QuestCategory.CREATIVE -> stringResource(R.string.cat_creative)
+                        QuestCategory.MINDFUL -> stringResource(R.string.cat_mindful)
+                    }
                     FilterChip(
                         selected = uiState.selectedCategory == category,
                         onClick = { viewModel.setCategory(if (uiState.selectedCategory == category) null else category) },
-                        label = { Text(category.name) },
+                        label = { Text(categoryLabel) },
                         modifier = Modifier.padding(4.dp)
                     )
                 }
@@ -78,16 +87,21 @@ fun QuestGeneratorScreen(viewModel: QuestViewModel) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text("Energy Level", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.filter_energy), style = MaterialTheme.typography.titleMedium)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
                 EnergyLevel.entries.forEach { level ->
+                    val levelLabel = when (level) {
+                        EnergyLevel.LOW -> stringResource(R.string.energy_low)
+                        EnergyLevel.MEDIUM -> stringResource(R.string.energy_medium)
+                        EnergyLevel.HIGH -> stringResource(R.string.energy_high)
+                    }
                     FilterChip(
                         selected = uiState.selectedEnergyLevel == level,
                         onClick = { viewModel.setEnergyLevel(if (uiState.selectedEnergyLevel == level) null else level) },
-                        label = { Text(level.name) },
+                        label = { Text(levelLabel) },
                         modifier = Modifier.padding(4.dp)
                     )
                 }
@@ -106,11 +120,11 @@ fun QuestGeneratorScreen(viewModel: QuestViewModel) {
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        "GENERATE",
+                        stringResource(R.string.btn_generate),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
-                    Text("QUEST", style = MaterialTheme.typography.bodyLarge)
+                    Text(stringResource(R.string.btn_quest), style = MaterialTheme.typography.bodyLarge)
                 }
             }
 
@@ -131,7 +145,7 @@ fun QuestGeneratorScreen(viewModel: QuestViewModel) {
             
             // Recently Completed
             if (uiState.recentlyCompleted.isNotEmpty()) {
-                Text("Recently Completed", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.label_recently_completed), style = MaterialTheme.typography.titleMedium)
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     items(uiState.recentlyCompleted) { quest ->
                         ListItem(
@@ -142,24 +156,6 @@ fun QuestGeneratorScreen(viewModel: QuestViewModel) {
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun StatCard(label: String, value: String) {
-    Card(
-        modifier = Modifier
-            .width(160.dp)
-            .padding(4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(value, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
-            Text(label, style = MaterialTheme.typography.labelSmall)
         }
     }
 }
@@ -189,13 +185,24 @@ fun ActiveQuestCard(quest: Quest, onComplete: () -> Unit, onReroll: () -> Unit) 
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(quest.title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                    Text("${quest.category} • ${quest.energyLevel}", style = MaterialTheme.typography.labelMedium)
+                    val categoryLabel = when (quest.category) {
+                        QuestCategory.SOCIAL -> stringResource(R.string.cat_social)
+                        QuestCategory.FITNESS -> stringResource(R.string.cat_fitness)
+                        QuestCategory.CREATIVE -> stringResource(R.string.cat_creative)
+                        QuestCategory.MINDFUL -> stringResource(R.string.cat_mindful)
+                    }
+                    val energyLabel = when (quest.energyLevel) {
+                        EnergyLevel.LOW -> stringResource(R.string.energy_low)
+                        EnergyLevel.MEDIUM -> stringResource(R.string.energy_medium)
+                        EnergyLevel.HIGH -> stringResource(R.string.energy_high)
+                    }
+                    Text("$categoryLabel • $energyLabel", style = MaterialTheme.typography.labelMedium)
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(onClick = {
                     val sendIntent: Intent = Intent().apply {
                         action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, "I just got a new quest: ${quest.title}! #RandomQuest")
+                        putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_message, quest.title))
                         type = "text/plain"
                     }
                     val shareIntent = Intent.createChooser(sendIntent, null)
@@ -211,11 +218,11 @@ fun ActiveQuestCard(quest: Quest, onComplete: () -> Unit, onReroll: () -> Unit) 
             
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                 TextButton(onClick = onReroll) {
-                    Text("Reroll")
+                    Text(stringResource(R.string.btn_reroll))
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(onClick = onComplete) {
-                    Text("Complete")
+                    Text(stringResource(R.string.btn_complete))
                 }
             }
         }

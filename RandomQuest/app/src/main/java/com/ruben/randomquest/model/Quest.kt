@@ -23,6 +23,7 @@ data class Quest(
     val description: String,
     val category: QuestCategory,
     val energyLevel: EnergyLevel,
+    val language: String = "en",
     val isCompleted: Boolean = false,
     val completedAt: Long? = null
 )
