@@ -1,9 +1,12 @@
 package com.ruben.randomquest
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.activity.enableEdgeToEdge
+import androidx.core.content.edit
+import androidx.core.os.LocaleListCompat
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -19,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import androidx.room.Room
@@ -34,13 +36,21 @@ import com.ruben.randomquest.ui.viewmodel.QuestViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Ensure the app starts in Bulgarian on the first run
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        if (!prefs.contains("locale_initialized")) {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("bg"))
+            prefs.edit { putBoolean("locale_initialized", true) }
+        }
+
         enableEdgeToEdge()
         
         val db = Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java,
             AppDatabase.DATABASE_NAME
-        ).fallbackToDestructiveMigration().build()
+        ).fallbackToDestructiveMigration(dropAllTables = true).build()
         
         val repository = QuestRepository(db.questDao())
 

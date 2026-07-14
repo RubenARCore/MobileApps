@@ -7,7 +7,7 @@
     <string name="filter_category">Филтър по категория</string>
     <string name="filter_energy">Ниво на енергия</string>
     <string name="btn_generate">ГЕНЕРИРАЙ</string>
-    <string name="btn_quest">КУЕСТ</string>
+    <string name="btn_quest">Предизвикателство</string>
     <string name="label_recently_completed">Наскоро завършени</string>
     <string name="btn_reroll">Смени</string>
     <string name="btn_complete">Завърши</string>

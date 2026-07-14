@@ -62,7 +62,7 @@ fun ProfileScreen(viewModel: QuestViewModel) {
                 horizontalArrangement = Arrangement.Start
             ) {
                 FilterChip(
-                    selected = currentLocale.startsWith("en") || currentLocale.isEmpty(),
+                    selected = currentLocale.startsWith("en"),
                     onClick = { 
                         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("en"))
                     },
@@ -70,7 +70,7 @@ fun ProfileScreen(viewModel: QuestViewModel) {
                     modifier = Modifier.padding(4.dp)
                 )
                 FilterChip(
-                    selected = currentLocale.startsWith("bg"),
+                    selected = currentLocale.startsWith("bg") || currentLocale.isEmpty(),
                     onClick = { 
                         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("bg"))
                     },
