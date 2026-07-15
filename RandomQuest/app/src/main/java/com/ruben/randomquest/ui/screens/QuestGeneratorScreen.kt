@@ -5,7 +5,6 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,6 +29,8 @@ import com.ruben.randomquest.R
 import com.ruben.randomquest.model.Quest
 import com.ruben.randomquest.model.QuestCategory
 import com.ruben.randomquest.ui.components.AppBackground
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import com.ruben.randomquest.ui.components.ConfettiEffect
 import com.ruben.randomquest.ui.components.GlassCard
 import com.ruben.randomquest.ui.components.StatCard
@@ -64,37 +65,44 @@ fun QuestGeneratorScreen(viewModel: QuestViewModel) {
         }
     ) { innerPadding ->
         AppBackground {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
+            Column(
                 modifier = Modifier
                     .padding(innerPadding)
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    .fillMaxSize()
+                    .padding(16.dp)
             ) {
                 // Statistics Tiles (Bento Style)
-                item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     StatCard(
                         label = stringResource(R.string.stat_completions),
                         value = completedCount.toString(),
-                        icon = "✅"
+                        icon = "✅",
+                        modifier = Modifier.weight(1f)
                     )
-                }
-                item {
                     StatCard(
                         label = stringResource(R.string.stat_streak),
                         value = uiState.streak.toString(),
-                        icon = "🔥"
+                        icon = "🔥",
+                        modifier = Modifier.weight(1f)
                     )
                 }
 
-                // Active Quest (Spans 2 columns)
-                item(span = { GridItemSpan(2) }) {
-                    AnimatedVisibility(
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Active Quest Section (Takes up available space and stays centered)
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    androidx.compose.animation.AnimatedVisibility(
                         visible = uiState.activeQuest != null,
-                        enter = fadeIn() + expandVertically(),
-                    exit = fadeOut() + shrinkVertically()
+                        enter = fadeIn() + scaleIn(),
+                        exit = fadeOut() + scaleOut()
                     ) {
                         uiState.activeQuest?.let { quest ->
                             ActiveQuestBentoCard(
@@ -106,35 +114,44 @@ fun QuestGeneratorScreen(viewModel: QuestViewModel) {
                     }
                 }
 
-                // Categories Header
-                item(span = { GridItemSpan(2) }) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Bottom Fixed Section: Categories and Generate Button
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     Text(
                         stringResource(R.string.filter_category),
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(top = 8.dp)
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
                     )
-                }
 
-                // Category Chips in Grid
-                items(QuestCategory.entries) { category ->
-                    val isSelected = uiState.selectedCategory == category
-                    val label = category.getLabel()
-                    
-                    CategoryTile(
-                        label = label,
-                        isSelected = isSelected,
-                        onClick = { viewModel.setCategory(if (isSelected) null else category) }
-                    )
-                }
+                    // Category Chips in Grid (Fixed height to prevent shifting)
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier.height(180.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        userScrollEnabled = false // Keep it static
+                    ) {
+                        items(QuestCategory.entries) { category ->
+                            val isSelected = uiState.selectedCategory == category
+                            val label = category.getLabel()
 
-                // Generate Button (Spans 2 columns)
-                item(span = { GridItemSpan(2) }) {
+                            CategoryTile(
+                                label = label,
+                                isSelected = isSelected,
+                                onClick = { viewModel.setCategory(if (isSelected) null else category) }
+                            )
+                        }
+                    }
+
                     Button(
                         onClick = { viewModel.generateQuest() },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(72.dp),
+                            .height(64.dp),
                         shape = RoundedCornerShape(24.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary
@@ -147,11 +164,6 @@ fun QuestGeneratorScreen(viewModel: QuestViewModel) {
                             fontWeight = FontWeight.Bold
                         )
                     }
-                }
-                
-                // Bottom Spacer
-                item(span = { GridItemSpan(2) }) {
-                    Spacer(modifier = Modifier.height(32.dp))
                 }
             }
 
@@ -187,76 +199,111 @@ fun CategoryTile(label: String, isSelected: Boolean, onClick: () -> Unit) {
 @Composable
 fun ActiveQuestBentoCard(quest: Quest, onComplete: () -> Unit, onReroll: () -> Unit) {
     val context = LocalContext.current
-    
-    GlassCard(modifier = Modifier.fillMaxWidth()) {
-        Column {
+
+    GlassCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight() // Allow it to wrap but stay within parent Box bounds
+    ) {
+        val isWelcome = quest.id == -1L
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp) // Slight internal padding
+        ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                val iconUrl = when (quest.category) {
-                    QuestCategory.SOCIAL -> "https://img.icons8.com/color/96/conference-call.png"
-                    QuestCategory.FUN -> "https://img.icons8.com/color/96/clown-fish.png"
-                    QuestCategory.FITNESS -> "https://img.icons8.com/color/96/dumbbell.png"
-                    QuestCategory.LOVE -> "https://img.icons8.com/color/96/filled-heart.png"
-                    QuestCategory.EXTREME -> "https://img.icons8.com/color/96/mountain.png"
-                    QuestCategory.KNOWLEDGE -> "https://img.icons8.com/color/96/book.png"
+                if (!isWelcome) {
+                    val iconUrl = when (quest.category) {
+                        QuestCategory.SOCIAL -> "https://img.icons8.com/color/96/conference-call.png"
+                        QuestCategory.FUN -> "https://img.icons8.com/color/96/clown-fish.png"
+                        QuestCategory.FITNESS -> "https://img.icons8.com/color/96/dumbbell.png"
+                        QuestCategory.LOVE -> "https://img.icons8.com/color/96/filled-heart.png"
+                        QuestCategory.EXTREME -> "https://img.icons8.com/color/96/mountain.png"
+                        QuestCategory.KNOWLEDGE -> "https://img.icons8.com/color/96/book.png"
+                    }
+                    AsyncImage(
+                        model = iconUrl,
+                        contentDescription = null,
+                        modifier = Modifier.size(56.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
-                AsyncImage(
-                    model = iconUrl,
-                    contentDescription = null,
-                    modifier = Modifier.size(56.dp)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
+                
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         quest.title,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.ExtraBold
+                        style = if (isWelcome) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.ExtraBold,
+                        textAlign = if (isWelcome) TextAlign.Center else TextAlign.Start,
+                        modifier = if (isWelcome) Modifier.fillMaxWidth() else Modifier
                     )
-                    Text(
-                        quest.category.getLabel(),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                }
-                IconButton(onClick = {
-                    val sendIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_message, quest.title))
-                        type = "text/plain"
+                    if (!isWelcome) {
+                        Text(
+                            quest.category.getLabel(),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
                     }
-                    val shareIntent = Intent.createChooser(sendIntent, null)
-                    context.startActivity(shareIntent)
-                }) {
-                    Icon(Icons.Default.Share, contentDescription = "Share", tint = MaterialTheme.colorScheme.primary)
+                }
+                
+                if (!isWelcome) {
+                    IconButton(onClick = {
+                        val sendIntent: Intent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_message, quest.title))
+                            type = "text/plain"
+                        }
+                        val shareIntent = Intent.createChooser(sendIntent, null)
+                        context.startActivity(shareIntent)
+                    }) {
+                        Icon(Icons.Default.Share, contentDescription = "Share", tint = MaterialTheme.colorScheme.primary)
+                    }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                quest.description,
-                style = MaterialTheme.typography.bodyLarge,
-                lineHeight = 24.sp
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                OutlinedButton(
-                    onClick = onReroll,
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(16.dp),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
-                ) {
-                    Icon(Icons.Default.Refresh, contentDescription = null)
-                    Spacer(Modifier.width(8.dp))
-                    Text(stringResource(R.string.btn_reroll))
-                }
-                Button(
-                    onClick = onComplete,
-                    modifier = Modifier.weight(1.5f),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Text(stringResource(R.string.btn_complete))
+
+            // Scrollable description area to keep card height manageable
+            Box(
+                modifier = Modifier
+                    .weight(1f, fill = false) // Take space if needed, but don't force expansion
+                    .heightIn(max = 200.dp) // Safety cap for very long descriptions
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth(),
+                contentAlignment = if (isWelcome) Alignment.Center else Alignment.TopStart
+            ) {
+                Text(
+                    quest.description,
+                    style = MaterialTheme.typography.bodyLarge,
+                    lineHeight = 24.sp,
+                    textAlign = if (isWelcome) TextAlign.Center else TextAlign.Start
+                )
+            }
+
+            if (!isWelcome) {
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    OutlinedButton(
+                        onClick = onReroll,
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+                    ) {
+                        Icon(Icons.Default.Refresh, contentDescription = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.btn_reroll))
+                    }
+                    Button(
+                        onClick = onComplete,
+                        modifier = Modifier.weight(1.5f),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Text(stringResource(R.string.btn_complete))
+                    }
                 }
             }
         }
     }
 }
+
