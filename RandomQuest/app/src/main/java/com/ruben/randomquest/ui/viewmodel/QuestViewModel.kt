@@ -3,7 +3,6 @@ package com.ruben.randomquest.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ruben.randomquest.data.QuestRepository
-import com.ruben.randomquest.model.EnergyLevel
 import com.ruben.randomquest.model.Quest
 import com.ruben.randomquest.model.QuestCategory
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +15,6 @@ import kotlinx.coroutines.launch
 data class QuestUiState(
     val activeQuest: Quest? = null,
     val selectedCategory: QuestCategory? = null,
-    val selectedEnergyLevel: EnergyLevel? = null,
     val totalCompleted: Int = 0,
     val streak: Int = 0,
     val isLoading: Boolean = false,
@@ -47,10 +45,6 @@ class QuestViewModel(private val repository: QuestRepository) : ViewModel() {
         _uiState.value = _uiState.value.copy(selectedCategory = category)
     }
 
-    fun setEnergyLevel(level: EnergyLevel?) {
-        _uiState.value = _uiState.value.copy(selectedEnergyLevel = level)
-    }
-
     fun generateQuest() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
@@ -58,8 +52,7 @@ class QuestViewModel(private val repository: QuestRepository) : ViewModel() {
                 .ifEmpty { "bg" }.take(2)
             val quest = repository.getRandomQuest(
                 currentLanguage,
-                _uiState.value.selectedCategory,
-                _uiState.value.selectedEnergyLevel
+                _uiState.value.selectedCategory
             )
             _uiState.value = _uiState.value.copy(activeQuest = quest, isLoading = false)
         }
