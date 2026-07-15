@@ -34,6 +34,11 @@ class QuestViewModel(private val repository: QuestRepository) : ViewModel() {
         viewModelScope.launch {
             repository.prepopulateIfNeeded()
             updateStats()
+            
+            val currentLanguage = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales().toLanguageTags()
+                .ifEmpty { "bg" }.take(2)
+            _uiState.value = _uiState.value.copy(activeQuest = getWelcomeQuest(currentLanguage))
+
             repository.getAllQuests().collect { quests ->
                 _uiState.value = _uiState.value.copy(
                     recentlyCompleted = quests.filter { it.isCompleted }.sortedByDescending { it.completedAt }.take(5)
@@ -62,14 +67,18 @@ class QuestViewModel(private val repository: QuestRepository) : ViewModel() {
     fun completeQuest() {
         val currentQuest = _uiState.value.activeQuest ?: return
         viewModelScope.launch {
-            repository.completeQuest(currentQuest)
+            if (currentQuest.id != -1L) {
+                repository.completeQuest(currentQuest)
+                updateStats()
+            }
             _uiState.value = _uiState.value.copy(
                 activeQuest = null,
-                showCelebration = true
+                showCelebration = currentQuest.id != -1L
             )
-            updateStats()
-            kotlinx.coroutines.delay(3000)
-            _uiState.value = _uiState.value.copy(showCelebration = false)
+            if (currentQuest.id != -1L) {
+                kotlinx.coroutines.delay(3000)
+                _uiState.value = _uiState.value.copy(showCelebration = false)
+            }
         }
     }
 
@@ -81,6 +90,28 @@ class QuestViewModel(private val repository: QuestRepository) : ViewModel() {
         viewModelScope.launch {
             val streak = repository.getStreak()
             _uiState.value = _uiState.value.copy(streak = streak)
+        }
+    }
+
+    companion object {
+        fun getWelcomeQuest(language: String): Quest {
+            return if (language == "bg") {
+                Quest(
+                    id = -1,
+                    title = "Ще се предизвикаш ли?",
+                    description = "Избери си категория и нека се гмурнем в света на предизвикателствата",
+                    category = QuestCategory.SOCIAL, // Dummy
+                    language = "bg"
+                )
+            } else {
+                Quest(
+                    id = -1,
+                    title = "Will you challenge yourself?",
+                    description = "Pick a category and let's dive into the world of challenges!",
+                    category = QuestCategory.SOCIAL, // Dummy
+                    language = "en"
+                )
+            }
         }
     }
 }
