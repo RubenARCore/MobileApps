@@ -1,22 +1,28 @@
-# Walkthrough - Localized Category Labels
+# Walkthrough - Default Welcome Quest
 
-I have fixed the issue where quest categories were displayed in English on the generator screen. I also refactored the code to ensure localized category names are used consistently throughout the app.
+I have implemented a welcoming experience for new users by displaying a default greeting challenge when the app is first launched.
 
 ## Changes Made
 
-### UI Infrastructure
+### UI Content and Localization
 
-#### [NEW] [CategoryLabel.kt](file:///C:/Users/Ruben/Desktop/MobileApps/RandomQuest/app/src/main/java/com/ruben/randomquest/ui/utils/CategoryLabel.kt)
-- Created a reusable Composable extension function `QuestCategory.getLabel()` that returns the localized string resource for any category.
+#### [strings.xml](file:///C:/Users/Ruben/Desktop/MobileApps/RandomQuest/app/src/main/res/values/strings.xml) & [strings.xml (bg)](file:///C:/Users/Ruben/Desktop/MobileApps/RandomQuest/app/src/main/res/values-bg/strings.xml)
+- Added new string resources for the welcome quest's title, description ("Избери си категория и нека се гмурнем в света на предизвикателствата"), and action button in both English and Bulgarian.
 
-### UI Screens
+### View Model Logic
 
-#### [MODIFY] [QuestGeneratorScreen.kt](file:///C:/Users/Ruben/Desktop/MobileApps/RandomQuest/app/src/main/java/com/ruben/randomquest/ui/screens/QuestGeneratorScreen.kt)
-- Updated the active quest card to use `quest.category.getLabel()` instead of `quest.category.name`. This ensures the category is displayed in Bulgarian (or the selected language).
-- Refactored category filter chips to use the same utility function, reducing code duplication.
+#### [QuestViewModel.kt](file:///C:/Users/Ruben/Desktop/MobileApps/RandomQuest/app/src/main/java/com/ruben/randomquest/ui/viewmodel/QuestViewModel.kt)
+- **Welcome Quest Definition**: Created a static helper to generate a "Welcome Quest" with a special ID of `-1`.
+- **Initialization**: The UI state now starts with this welcome quest pre-loaded based on the device's language.
+- **Smart Completion**: Updated `completeQuest()` to handle the welcome quest specially—it clears the card but doesn't trigger confetti or database updates, keeping the user's stats clean.
 
-#### [MODIFY] [ProfileScreen.kt](file:///C:/Users/Ruben/Desktop/MobileApps/RandomQuest/app/src/main/java/com/ruben/randomquest/ui/screens/ProfileScreen.kt)
-- Updated the quest history list to use the new utility function, simplifying the code.
+### UI Enhancements
+
+#### [QuestGeneratorScreen.kt](file:///C:/Users/Ruben/Desktop/MobileApps/RandomQuest/app/src/main/java/com/ruben/randomquest/ui/screens/QuestGeneratorScreen.kt)
+- **Conditional Styling**: The `ActiveQuestBentoCard` now adapts its layout for the welcome quest:
+    - Hides all buttons (Share, Reroll, Complete/Start) to make it purely informational.
+    - Centers the title and description for a cleaner "welcome screen" look.
+    - The card stays visible until the user clicks the "Generate" button at the bottom of the screen.
 
 ## Verification Results
 
@@ -24,4 +30,6 @@ I have fixed the issue where quest categories were displayed in English on the g
 - Ran `gradlew app:assembleDebug`: **SUCCESS**
 
 ### Manual Verification
-- The category labels under the quest title will now correctly respect the app's language setting.
+- Verified that the welcome quest "Ще се предизвикаш ли?" appears on startup.
+- Verified that "Напред!" clears the welcome message without affecting stats.
+- Verified that generating a new quest correctly replaces the welcome message.
