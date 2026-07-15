@@ -1,26 +1,32 @@
-# Implementation Plan - Fix Quest Generation (Database Migration)
+# Implementation Plan - Default Welcome Quest
 
-The user reports that quests are not being generated. Investigation of logs reveals a crash due to an invalid enum constant `CREATIVE` in the database, which is not present in the `QuestCategory` enum. This likely happened due to inconsistent data from a previous version of the app.
-
-Additionally, the new 360 quests added recently might not have been loaded if the database already contained some data.
+The goal is to show a default "Welcome Quest" when the app starts, prompting the user to start their journey.
 
 ## Proposed Changes
 
-### Data Layer
+### UI State and Logic
 
-#### [MODIFY] [AppDatabase.kt](file:///C:/Users/Ruben/Desktop/MobileApps/RandomQuest/app/src/main/java/com/ruben/randomquest/data/AppDatabase.kt)
-- Increment the database version from `4` to `5`.
-- This will trigger a destructive migration (wiping the database) because `fallbackToDestructiveMigration(dropAllTables = true)` is enabled in `MainActivity`.
+#### [MODIFY] [QuestViewModel.kt](file:///C:/Users/Ruben/Desktop/MobileApps/RandomQuest/app/src/main/java/com/ruben/randomquest/ui/viewmodel/QuestViewModel.kt)
+- Define a constant `WELCOME_QUEST` in a companion object or as a top-level private val.
+- Initialize `activeQuest` in `QuestUiState` with `WELCOME_QUEST`.
+- Update `completeQuest()` to handle the `WELCOME_QUEST` (id = -1) by simply clearing the state without database interaction.
 
-#### [MODIFY] [QuestRepository.kt](file:///C:/Users/Ruben/Desktop/MobileApps/RandomQuest/app/src/main/java/com/ruben/randomquest/data/QuestRepository.kt)
-- Update `prepopulateIfNeeded()` to be more robust. Instead of just checking if count is 0, we can ensure that if the count is significantly lower than the expected size, we insert the initial quests.
-- However, with the version increment, `count == 0` will be true on the next start, so the new 360 quests will be loaded correctly.
+### UI Components
+
+#### [MODIFY] [QuestGeneratorScreen.kt](file:///C:/Users/Ruben/Desktop/MobileApps/RandomQuest/app/src/main/java/com/ruben/randomquest/ui/screens/QuestGeneratorScreen.kt)
+- In `ActiveQuestBentoCard`, hide the category label and icon if the quest is the `WELCOME_QUEST`.
+- Also hide the "Share" button for the welcome message as it doesn't make sense to share it.
+
+## User Review Required
+
+> [!NOTE]
+> I will use a special ID (`-1`) for the welcome quest to distinguish it from database quests.
+> For the English version, I will provide a translated equivalent so it doesn't look out of place if the user changes the language.
 
 ## Verification Plan
 
-### Automated Tests
-- Run `gradlew app:assembleDebug` to ensure it builds.
-- Check logcat after start to ensure no more `IllegalArgumentException` is thrown.
-
 ### Manual Verification
-- Deploy the app and verify that the "Generate" button now works and displays quests from the new list.
+- Launch the app.
+- Verify that the "Ще се предизвикаш ли?" card is shown immediately.
+- Verify that clicking "Complete" clears it.
+- Verify that clicking "Reroll" or "Generate" replaces it with a real quest.
