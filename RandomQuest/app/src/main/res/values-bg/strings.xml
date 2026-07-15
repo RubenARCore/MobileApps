@@ -33,4 +33,7 @@
     <string name="settings_language">Език</string>
     <string name="lang_en">English</string>
     <string name="lang_bg">Български</string>
+    <string name="welcome_title">Ще се предизвикаш ли?</string>
+    <string name="welcome_desc">Избери си категория и нека се гмурнем в света на предизвикателствата</string>
+    <string name="btn_start">Напред!</string>
 </resources>
