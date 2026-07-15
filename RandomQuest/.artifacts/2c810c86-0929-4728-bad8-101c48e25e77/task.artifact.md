@@ -1,3 +1,5 @@
-- [x] Increment database version in `AppDatabase.kt` (v4 -> v5)
-- [x] Verify build and successful database initialization
-- [x] Verify quest generation in logs/device
+- [ ] Define `WelcomeQuest` constants in `QuestViewModel.kt`
+- [ ] Initialize `QuestUiState` with the welcome quest based on current language
+- [ ] Handle welcome quest completion in `QuestViewModel`
+- [ ] Update `ActiveQuestBentoCard` in `QuestGeneratorScreen.kt` to handle the welcome quest UI
+- [ ] Verify build and behavior
