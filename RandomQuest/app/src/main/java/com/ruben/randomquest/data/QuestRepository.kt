@@ -1,6 +1,5 @@
 package com.ruben.randomquest.data
 
-import com.ruben.randomquest.model.EnergyLevel
 import com.ruben.randomquest.model.Quest
 import com.ruben.randomquest.model.QuestCategory
 import kotlinx.coroutines.flow.Flow
@@ -13,8 +12,8 @@ class QuestRepository(private val questDao: QuestDao) {
     
     fun getCompletedQuestsCount(): Flow<Int> = questDao.getCompletedQuestsCount()
 
-    suspend fun getRandomQuest(language: String, category: QuestCategory?, energyLevel: EnergyLevel?): Quest? {
-        return questDao.getRandomQuest(language, category, energyLevel)
+    suspend fun getRandomQuest(language: String, category: QuestCategory?): Quest? {
+        return questDao.getRandomQuest(language, category)
     }
 
     suspend fun completeQuest(quest: Quest) {

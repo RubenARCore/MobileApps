@@ -1,15 +1,14 @@
 package com.ruben.randomquest.data
 
 import androidx.room.*
-import com.ruben.randomquest.model.EnergyLevel
 import com.ruben.randomquest.model.Quest
 import com.ruben.randomquest.model.QuestCategory
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface QuestDao {
-    @Query("SELECT * FROM quests WHERE isCompleted = 0 AND language = :language AND (:category IS NULL OR category = :category) AND (:energyLevel IS NULL OR energyLevel = :energyLevel) ORDER BY RANDOM() LIMIT 1")
-    suspend fun getRandomQuest(language: String, category: QuestCategory?, energyLevel: EnergyLevel?): Quest?
+    @Query("SELECT * FROM quests WHERE isCompleted = 0 AND language = :language AND (:category IS NULL OR category = :category) ORDER BY RANDOM() LIMIT 1")
+    suspend fun getRandomQuest(language: String, category: QuestCategory?): Quest?
 
     @Query("SELECT * FROM quests WHERE isCompleted = 1 ORDER BY completedAt DESC")
     fun getCompletedQuests(): Flow<List<Quest>>
