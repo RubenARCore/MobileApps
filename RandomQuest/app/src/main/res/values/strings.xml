@@ -33,4 +33,7 @@
     <string name="settings_language">Language</string>
     <string name="lang_en">English</string>
     <string name="lang_bg">Bulgarian</string>
+    <string name="welcome_title">Will you challenge yourself?</string>
+    <string name="welcome_desc">Pick a category and let\'s dive into the world of challenges!</string>
+    <string name="btn_start">Let\'s go!</string>
 </resources>
