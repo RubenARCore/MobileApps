@@ -20,9 +20,11 @@
     <string name="streak_days">%1$d Days</string>
 
     <string name="cat_social">Social</string>
+    <string name="cat_fun">Fun</string>
     <string name="cat_fitness">Fitness</string>
-    <string name="cat_creative">Creative</string>
-    <string name="cat_mindful">Mindful</string>
+    <string name="cat_love">Love</string>
+    <string name="cat_extreme">Extreme</string>
+    <string name="cat_knowledge">Knowledge</string>
 
     <string name="energy_low">Low</string>
     <string name="energy_medium">Medium</string>

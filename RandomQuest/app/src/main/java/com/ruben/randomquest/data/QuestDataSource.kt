@@ -1,43 +1,24 @@
 package com.ruben.randomquest.data
 
-import com.ruben.randomquest.model.EnergyLevel
 import com.ruben.randomquest.model.Quest
 import com.ruben.randomquest.model.QuestCategory
 
 object QuestDataSource {
     val initialQuests = listOf(
         // English Quests
-        Quest(title = "Compliment a stranger", description = "Find someone you don't know and give them a genuine compliment.", category = QuestCategory.SOCIAL, energyLevel = EnergyLevel.LOW, language = "en"),
-        Quest(title = "Call an old friend", description = "Pick up the phone and call someone you haven't spoken to in over 6 months.", category = QuestCategory.SOCIAL, energyLevel = EnergyLevel.MEDIUM, language = "en"),
-        Quest(title = "Attend a local meetup", description = "Go to a community event or meetup related to your hobbies.", category = QuestCategory.SOCIAL, energyLevel = EnergyLevel.HIGH, language = "en"),
-        
-        Quest(title = "10 Pushups", description = "Drop and give me 10! Quick energy boost.", category = QuestCategory.FITNESS, energyLevel = EnergyLevel.LOW, language = "en"),
-        Quest(title = "30-minute power walk", description = "Walk at a brisk pace around your neighborhood.", category = QuestCategory.FITNESS, energyLevel = EnergyLevel.MEDIUM, language = "en"),
-        Quest(title = "Try a new workout class", description = "Go to a gym and try a class you've never done before (Yoga, HIIT, etc.).", category = QuestCategory.FITNESS, energyLevel = EnergyLevel.HIGH, language = "en"),
-        
-        Quest(title = "Doodle for 5 minutes", description = "Grab a pen and paper and let your hand move freely.", category = QuestCategory.CREATIVE, energyLevel = EnergyLevel.LOW, language = "en"),
-        Quest(title = "Write a short poem", description = "Write at least 4 lines about how you feel right now.", category = QuestCategory.CREATIVE, energyLevel = EnergyLevel.MEDIUM, language = "en"),
-        Quest(title = "Cook a new recipe", description = "Find a recipe online that you've never tried and make it for dinner.", category = QuestCategory.CREATIVE, energyLevel = EnergyLevel.HIGH, language = "en"),
-        
-        Quest(title = "1 minute of deep breathing", description = "Close your eyes and take 5 slow, deep breaths.", category = QuestCategory.MINDFUL, energyLevel = EnergyLevel.LOW, language = "en"),
-        Quest(title = "Meditate for 10 minutes", description = "Find a quiet spot and focus on your breath.", category = QuestCategory.MINDFUL, energyLevel = EnergyLevel.MEDIUM, language = "en"),
-        Quest(title = "Digital detox evening", description = "Turn off all screens 2 hours before bed.", category = QuestCategory.MINDFUL, energyLevel = EnergyLevel.HIGH, language = "en"),
+        Quest(title = "Compliment a stranger", description = "Find someone you don't know and give them a genuine compliment.", category = QuestCategory.SOCIAL, language = "en"),
+        Quest(title = "Tell a joke to someone", description = "Find a friend or colleague and tell them a funny joke.", category = QuestCategory.FUN, language = "en"),
+        Quest(title = "10 Pushups", description = "Drop and give me 10! Quick energy boost.", category = QuestCategory.FITNESS, language = "en"),
+        Quest(title = "Write a love note", description = "Write a small note of appreciation to someone you care about.", category = QuestCategory.LOVE, language = "en"),
+        Quest(title = "Take a cold shower", description = "Switch to cold water for the last 30 seconds of your shower.", category = QuestCategory.EXTREME, language = "en"),
+        Quest(title = "Learn a new fact", description = "Look up a random fact on Wikipedia and share it with someone.", category = QuestCategory.KNOWLEDGE, language = "en"),
 
         // Bulgarian Quests
-        Quest(title = "Направи комплимент на непознат", description = "Намери някой, когото не познаваш, и му направи искрен комплимент.", category = QuestCategory.SOCIAL, energyLevel = EnergyLevel.LOW, language = "bg"),
-        Quest(title = "Обади се на стар приятел", description = "Вземи телефона и се обади на някой, с когото не си говорил повече от 6 месеца.", category = QuestCategory.SOCIAL, energyLevel = EnergyLevel.MEDIUM, language = "bg"),
-        Quest(title = "Посети местно събитие", description = "Отиди на събитие в общността или среща, свързана с твоите хобита.", category = QuestCategory.SOCIAL, energyLevel = EnergyLevel.HIGH, language = "bg"),
-        
-        Quest(title = "10 лицеви опори", description = "Падни за 10! Бърза доза енергия.", category = QuestCategory.FITNESS, energyLevel = EnergyLevel.LOW, language = "bg"),
-        Quest(title = "30-минутна бърза разходка", description = "Разходи се с бързо темпо из квартала.", category = QuestCategory.FITNESS, energyLevel = EnergyLevel.MEDIUM, language = "bg"),
-        Quest(title = "Опитай нов вид тренировка", description = "Отиди във фитнеса и опитай клас, който никога не си правил (Йога, HIIT и т.н.).", category = QuestCategory.FITNESS, energyLevel = EnergyLevel.HIGH, language = "bg"),
-        
-        Quest(title = "Драскай 5 минути", description = "Вземи химикалка и хартия и остави ръката си да се движи свободно.", category = QuestCategory.CREATIVE, energyLevel = EnergyLevel.LOW, language = "bg"),
-        Quest(title = "Напиши кратко стихотворение", description = "Напиши поне 4 реда за това как се чувстваш в момента.", category = QuestCategory.CREATIVE, energyLevel = EnergyLevel.MEDIUM, language = "bg"),
-        Quest(title = "Сготви по нова рецепта", description = "Намери рецепта онлайн, която никога не си опитвал, и я приготви за вечеря.", category = QuestCategory.CREATIVE, energyLevel = EnergyLevel.HIGH, language = "bg"),
-        
-        Quest(title = "1 минута дълбоко дишане", description = "Затвори очи и поеми 5 бавни, дълбоки вдишвания.", category = QuestCategory.MINDFUL, energyLevel = EnergyLevel.LOW, language = "bg"),
-        Quest(title = "Медитирай за 10 минути", description = "Намери тихо място и се съсредоточи върху дишането си.", category = QuestCategory.MINDFUL, energyLevel = EnergyLevel.MEDIUM, language = "bg"),
-        Quest(title = "Вечер без цифрови устройства", description = "Изключи всички екрани 2 часа преди лягане.", category = QuestCategory.MINDFUL, energyLevel = EnergyLevel.HIGH, language = "bg")
+        Quest(title = "Направи комплимент на непознат", description = "Намери някой, когото не познаваш, и му направи искрен комплимент.", category = QuestCategory.SOCIAL, language = "bg"),
+        Quest(title = "Разкажи виц на някого", description = "Намери приятел или колега и му разкажи забавен виц.", category = QuestCategory.FUN, language = "bg"),
+        Quest(title = "10 лицеви опори", description = "Падни за 10! Бърза доза енергия.", category = QuestCategory.FITNESS, language = "bg"),
+        Quest(title = "Напиши любовно послание", description = "Напиши малка бележка на признателност към някой, на когото държиш.", category = QuestCategory.LOVE, language = "bg"),
+        Quest(title = "Вземи студен душ", description = "Превключи на студена вода за последните 30 секунди от душа си.", category = QuestCategory.EXTREME, language = "bg"),
+        Quest(title = "Научи нов факт", description = "Потърси случаен факт в Wikipedia и го сподели с някого.", category = QuestCategory.KNOWLEDGE, language = "bg")
     )
 }

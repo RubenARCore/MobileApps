@@ -1,0 +1,10 @@
+- [ ] Премахване на `EnergyLevel` от модела (`Quest.kt`)
+- [ ] Обновяване на началните данни (`QuestDataSource.kt`)
+- [ ] Премахване на конверторите (`Converters.kt`)
+- [ ] Обновяване на DAO и SQL заявката (`QuestDao.kt`)
+- [ ] Обновяване на репозиторито (`QuestRepository.kt`)
+- [ ] Обновяване на ViewModel (`QuestViewModel.kt`)
+- [ ] Обновяване на екрана за генериране (`QuestGeneratorScreen.kt`)
+- [ ] Обновяване на профилния екран (`ProfileScreen.kt`)
+- [ ] Обновяване на тестовете (`QuestRepositoryTest.kt`)
+- [ ] Верификация и финални тестове

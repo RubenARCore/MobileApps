@@ -107,9 +107,11 @@ fun ProfileScreen(viewModel: QuestViewModel) {
                                 supportingContent = { 
                                     val categoryLabel = when (quest.category) {
                                         QuestCategory.SOCIAL -> stringResource(R.string.cat_social)
+                                        QuestCategory.FUN -> stringResource(R.string.cat_fun)
                                         QuestCategory.FITNESS -> stringResource(R.string.cat_fitness)
-                                        QuestCategory.CREATIVE -> stringResource(R.string.cat_creative)
-                                        QuestCategory.MINDFUL -> stringResource(R.string.cat_mindful)
+                                        QuestCategory.LOVE -> stringResource(R.string.cat_love)
+                                        QuestCategory.EXTREME -> stringResource(R.string.cat_extreme)
+                                        QuestCategory.KNOWLEDGE -> stringResource(R.string.cat_knowledge)
                                     }
                                     val energyLabel = when (quest.energyLevel) {
                                         EnergyLevel.LOW -> stringResource(R.string.energy_low)

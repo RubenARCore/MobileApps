@@ -20,9 +20,11 @@
     <string name="streak_days">%1$d дни</string>
 
     <string name="cat_social">Социални</string>
+    <string name="cat_fun">Забавни</string>
     <string name="cat_fitness">Фитнес</string>
-    <string name="cat_creative">Креативни</string>
-    <string name="cat_mindful">Осъзнатост</string>
+    <string name="cat_love">Любовни</string>
+    <string name="cat_extreme">Екстремни</string>
+    <string name="cat_knowledge">Знания</string>
 
     <string name="energy_low">Ниско</string>
     <string name="energy_medium">Средно</string>
