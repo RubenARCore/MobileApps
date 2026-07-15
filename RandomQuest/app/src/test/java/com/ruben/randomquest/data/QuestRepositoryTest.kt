@@ -1,6 +1,5 @@
 package com.ruben.randomquest.data
 
-import com.ruben.randomquest.model.EnergyLevel
 import com.ruben.randomquest.model.Quest
 import com.ruben.randomquest.model.QuestCategory
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +16,7 @@ class QuestRepositoryTest {
         var quests = mutableListOf<Quest>()
         var completionDates = mutableListOf<Long>()
 
-        override suspend fun getRandomQuest(category: QuestCategory?, energyLevel: EnergyLevel?): Quest? = null
+        override suspend fun getRandomQuest(language: String, category: QuestCategory?): Quest? = null
         override fun getCompletedQuests(): Flow<List<Quest>> = flowOf(emptyList())
         override fun getCompletedQuestsCount(): Flow<Int> = flowOf(0)
         override suspend fun updateQuest(quest: Quest) {}

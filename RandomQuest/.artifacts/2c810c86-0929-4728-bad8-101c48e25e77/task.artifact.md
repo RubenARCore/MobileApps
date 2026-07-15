@@ -1,0 +1,3 @@
+- [x] Increment database version in `AppDatabase.kt` (v4 -> v5)
+- [x] Verify build and successful database initialization
+- [x] Verify quest generation in logs/device

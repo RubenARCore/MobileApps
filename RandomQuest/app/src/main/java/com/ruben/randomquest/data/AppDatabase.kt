@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.ruben.randomquest.model.Quest
 
-@Database(entities = [Quest::class], version = 3, exportSchema = false)
+@Database(entities = [Quest::class], version = 5, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun questDao(): QuestDao

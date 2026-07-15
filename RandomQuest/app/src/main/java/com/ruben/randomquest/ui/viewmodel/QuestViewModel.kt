@@ -18,6 +18,7 @@ data class QuestUiState(
     val totalCompleted: Int = 0,
     val streak: Int = 0,
     val isLoading: Boolean = false,
+    val showCelebration: Boolean = false,
     val recentlyCompleted: List<Quest> = emptyList()
 )
 
@@ -62,8 +63,13 @@ class QuestViewModel(private val repository: QuestRepository) : ViewModel() {
         val currentQuest = _uiState.value.activeQuest ?: return
         viewModelScope.launch {
             repository.completeQuest(currentQuest)
-            _uiState.value = _uiState.value.copy(activeQuest = null)
+            _uiState.value = _uiState.value.copy(
+                activeQuest = null,
+                showCelebration = true
+            )
             updateStats()
+            kotlinx.coroutines.delay(3000)
+            _uiState.value = _uiState.value.copy(showCelebration = false)
         }
     }
 
