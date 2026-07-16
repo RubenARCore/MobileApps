@@ -25,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -428,6 +430,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailyMotivatorApp(isDarkMode: Boolean, onThemeToggle: (Boolean) -> Unit, vm: MotivatorViewModel = viewModel()) {
     var currentScreen by remember { mutableStateOf<Screen>(Screen.Home) }
@@ -444,6 +447,22 @@ fun DailyMotivatorApp(isDarkMode: Boolean, onThemeToggle: (Boolean) -> Unit, vm:
     var lastDate by remember { mutableStateOf(prefs.getString("last_date_key", "") ?: "") }
 
     Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = AppStrings.get(language, "app_title"),
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
+                )
+            )
+        },
         bottomBar = {
             NavigationBar {
                 val screens = listOf(Screen.Home, Screen.Favorites, Screen.Settings)
@@ -650,8 +669,6 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(AppStrings.get(language, "app_title"), fontSize = 20.sp, fontWeight = FontWeight.ExtraBold, color = Color.DarkGray, textAlign = TextAlign.Center)
-
             if (currentPhrase != null) {
                 InfoCard(
                     title = AppStrings.get(language, "phrase_title"),
