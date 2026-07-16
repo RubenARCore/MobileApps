@@ -1,5 +1,0 @@
-- [ ] Define `WelcomeQuest` constants in `QuestViewModel.kt`
-- [ ] Initialize `QuestUiState` with the welcome quest based on current language
-- [ ] Handle welcome quest completion in `QuestViewModel`
-- [ ] Update `ActiveQuestBentoCard` in `QuestGeneratorScreen.kt` to handle the welcome quest UI
-- [ ] Verify build and behavior
