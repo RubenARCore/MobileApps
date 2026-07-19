@@ -8,13 +8,16 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AchievementNotificationManager @Inject constructor() {
+class AchievementNotificationManager @Inject constructor(
+    private val feedbackManager: FeedbackManager
+) {
     private val _currentAchievement = MutableStateFlow<Achievement?>(null)
     val currentAchievement = _currentAchievement.asStateFlow()
 
     private val queue = mutableListOf<Achievement>()
 
     fun show(achievement: Achievement) {
+        feedbackManager.vibrateSuccess()
         if (_currentAchievement.value == null) {
             _currentAchievement.value = achievement
         } else {

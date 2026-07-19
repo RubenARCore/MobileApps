@@ -2,7 +2,7 @@ package com.ruben.balkanclickergame.data.datasource.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.ruben.balkanclickergame.data.datasource.local.dao.GameDao
+import com.ruben.balkanclickergame.data.datasource.local.dao.GameStateDao
 import com.ruben.balkanclickergame.data.datasource.local.entity.GameStateEntity
 import com.ruben.balkanclickergame.data.datasource.local.entity.OwnedUpgradeEntity
 
@@ -12,5 +12,5 @@ import com.ruben.balkanclickergame.data.datasource.local.entity.OwnedUpgradeEnti
     exportSchema = false
 )
 abstract class GameDatabase : RoomDatabase() {
-    abstract fun gameDao(): GameDao
+    abstract fun gameStateDao(): GameStateDao
 }

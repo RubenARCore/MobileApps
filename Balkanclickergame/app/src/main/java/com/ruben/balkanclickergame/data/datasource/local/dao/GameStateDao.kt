@@ -6,7 +6,7 @@ import com.ruben.balkanclickergame.data.datasource.local.entity.OwnedUpgradeEnti
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface GameDao {
+interface GameStateDao {
     @Query("SELECT * FROM game_state WHERE id = 0")
     fun getGameState(): Flow<GameStateEntity?>
 

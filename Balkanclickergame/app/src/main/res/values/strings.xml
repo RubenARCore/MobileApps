@@ -11,11 +11,22 @@
     <string name="dashboard_passive_income_format">%1$d / s</string>
     <string name="dashboard_floating_text_format">+%1$d</string>
 
+    <!-- Sections -->
+    <string name="section_events">Events</string>
+    <string name="section_prestige">Prestige</string>
+    <string name="section_upgrades">New Upgrades</string>
+
     <!-- Prestige -->
     <string name="prestige_points_format">Prestige: %1$d points</string>
     <string name="prestige_multiplier_format">Boost: x%1$.2f</string>
     <string name="prestige_emigrate_button">Emigrate to Germany</string>
     <string name="prestige_emigrate_desc">Reset progress for a permanent income boost. (Need 100k lifetime coins)</string>
+
+    <!-- Events -->
+    <string name="event_wedding_title">Balkan Wedding!</string>
+    <string name="event_wedding_desc">The music is loud, the money is flying! 2x income.</string>
+    <string name="event_inflation_title">Hyperinflation!</string>
+    <string name="event_inflation_desc">The currency is crashing! 0.5x income.</string>
 
     <!-- Shop Screen -->
     <string name="shop_title">Balkan Bazaar</string>

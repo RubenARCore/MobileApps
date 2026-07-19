@@ -3,6 +3,8 @@ package com.ruben.balkanclickergame.domain.usecase
 import com.ruben.balkanclickergame.domain.model.GameState
 import com.ruben.balkanclickergame.domain.repository.GameRepository
 import com.ruben.balkanclickergame.presentation.manager.AchievementNotificationManager
+import com.ruben.balkanclickergame.presentation.manager.FeedbackManager
+import io.mockk.mockk
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
@@ -26,7 +28,7 @@ class ProcessClickUseCaseTest {
         val useCase = ProcessClickUseCase(
             repository,
             CheckAchievementsUseCase(),
-            AchievementNotificationManager()
+            AchievementNotificationManager(mockk(relaxed = true))
         )
 
         useCase()

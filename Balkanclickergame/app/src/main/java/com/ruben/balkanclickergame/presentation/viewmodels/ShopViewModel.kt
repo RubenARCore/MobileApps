@@ -6,6 +6,7 @@ import com.ruben.balkanclickergame.domain.model.Upgrade
 import com.ruben.balkanclickergame.domain.repository.UpgradeRepository
 import com.ruben.balkanclickergame.domain.usecase.GetGameStateUseCase
 import com.ruben.balkanclickergame.domain.usecase.PurchaseUpgradeUseCase
+import com.ruben.balkanclickergame.presentation.manager.FeedbackManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +26,8 @@ data class UpgradeUiModel(
 class ShopViewModel @Inject constructor(
     private val upgradeRepository: UpgradeRepository,
     private val getGameStateUseCase: GetGameStateUseCase,
-    private val purchaseUpgradeUseCase: PurchaseUpgradeUseCase
+    private val purchaseUpgradeUseCase: PurchaseUpgradeUseCase,
+    private val feedbackManager: FeedbackManager
 ) : ViewModel() {
 
     val shopItems: StateFlow<List<UpgradeUiModel>> = getGameStateUseCase()
@@ -52,7 +54,11 @@ class ShopViewModel @Inject constructor(
 
     fun purchaseUpgrade(upgradeId: String) {
         viewModelScope.launch {
-            purchaseUpgradeUseCase(upgradeId)
+            val result = purchaseUpgradeUseCase(upgradeId)
+            if (result.isSuccess) {
+                feedbackManager.vibrateSuccess()
+                feedbackManager.playPurchaseSound()
+            }
         }
     }
 }

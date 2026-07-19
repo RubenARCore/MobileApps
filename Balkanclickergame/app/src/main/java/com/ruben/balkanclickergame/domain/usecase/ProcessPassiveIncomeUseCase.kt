@@ -10,12 +10,13 @@ class ProcessPassiveIncomeUseCase @Inject constructor(
     private val checkAchievementsUseCase: CheckAchievementsUseCase,
     private val achievementNotificationManager: AchievementNotificationManager
 ) {
-    suspend operator fun invoke() {
+    suspend operator fun invoke(eventMultiplier: Double = 1.0) {
         val currentState = repository.getGameState().first()
-        if (currentState.totalPassiveIncome > 0) {
+        val income = (currentState.totalPassiveIncome * eventMultiplier * currentState.prestigeMultiplier).toLong()
+        if (income > 0) {
             var newState = currentState.copy(
-                score = currentState.score + currentState.totalPassiveIncome,
-                lifetimeCoins = currentState.lifetimeCoins + currentState.totalPassiveIncome
+                score = currentState.score + income,
+                lifetimeCoins = currentState.lifetimeCoins + income
             )
 
             val newAchievements = checkAchievementsUseCase(newState)

@@ -11,11 +11,22 @@
     <string name="dashboard_passive_income_format">%1$d / сек</string>
     <string name="dashboard_floating_text_format">+%1$d</string>
 
+    <!-- Sections -->
+    <string name="section_events">Събития</string>
+    <string name="section_prestige">Престиж</string>
+    <string name="section_upgrades">Нови подобрения</string>
+
     <!-- Prestige -->
     <string name="prestige_points_format">Престиж: %1$d точки</string>
     <string name="prestige_multiplier_format">Бонус: x%1$.2f</string>
-    <string name="prestige_emigrate_button">Емигрирай в Германия</string>
+    <string name="prestige_emigrate_button">Емигрирай</string>
     <string name="prestige_emigrate_desc">Нулирай прогреса за постоянен бонус към дохода. (Нужни са 100к общо монети)</string>
+
+    <!-- Events -->
+    <string name="event_wedding_title">Балканска сватба</string>
+    <string name="event_wedding_desc">Музиката е силна, парите летят! 2х доход.</string>
+    <string name="event_inflation_title">Хиперинфлация</string>
+    <string name="event_inflation_desc">Валутата се срива! 0.5х доход.</string>
 
     <!-- Shop Screen -->
     <string name="shop_title">Балкански базар</string>
@@ -38,6 +49,6 @@
 
     <string name="upgrade_municipal_connections_name">Връзки в общината</string>
     <string name="upgrade_municipal_connections_desc">Братовчед в общината намалява цената на всички подобрения с 5% на ниво.</string>
-    <string name="upgrade_it_nephew_name">Племенник ИТ</string>
+    <string name="upgrade_it_nephew_name">Племенник ИТ-специалист</string>
     <string name="upgrade_it_nephew_desc">Той \"разбира от компютри\". Клика вместо вас 2 пъти в секунда на ниво.</string>
 </resources>

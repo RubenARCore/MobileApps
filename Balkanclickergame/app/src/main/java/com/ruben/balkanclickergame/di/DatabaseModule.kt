@@ -3,7 +3,7 @@ package com.ruben.balkanclickergame.di
 import android.content.Context
 import androidx.room.Room
 import com.ruben.balkanclickergame.data.datasource.local.GameDatabase
-import com.ruben.balkanclickergame.data.datasource.local.dao.GameDao
+import com.ruben.balkanclickergame.data.datasource.local.dao.GameStateDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,7 +27,7 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideGameDao(database: GameDatabase): GameDao {
-        return database.gameDao()
+    fun provideGameStateDao(database: GameDatabase): GameStateDao {
+        return database.gameStateDao()
     }
 }

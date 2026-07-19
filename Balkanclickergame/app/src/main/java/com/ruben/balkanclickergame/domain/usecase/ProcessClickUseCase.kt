@@ -10,11 +10,12 @@ class ProcessClickUseCase @Inject constructor(
     private val checkAchievementsUseCase: CheckAchievementsUseCase,
     private val achievementNotificationManager: AchievementNotificationManager
 ) {
-    suspend operator fun invoke() {
+    suspend operator fun invoke(eventMultiplier: Double = 1.0) {
         val currentState = repository.getGameState().first()
+        val clickPower = (currentState.clickPower * eventMultiplier * currentState.prestigeMultiplier).toLong()
         var newState = currentState.copy(
-            score = currentState.score + currentState.clickPower,
-            lifetimeCoins = currentState.lifetimeCoins + currentState.clickPower,
+            score = currentState.score + clickPower,
+            lifetimeCoins = currentState.lifetimeCoins + clickPower,
             lifetimeClicks = currentState.lifetimeClicks + 1
         )
         

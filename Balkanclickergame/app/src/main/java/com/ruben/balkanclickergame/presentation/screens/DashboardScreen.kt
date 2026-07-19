@@ -1,5 +1,6 @@
 package com.ruben.balkanclickergame.presentation.screens
 
+import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -8,14 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.MonetizationOn
-import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material.icons.rounded.TouchApp
 import androidx.compose.material3.*
-import com.ruben.balkanclickergame.presentation.viewmodels.UpgradeUiModel
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
-import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,16 +19,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.ui.res.stringResource
 import com.ruben.balkanclickergame.R
-import com.ruben.balkanclickergame.domain.model.GameState
+import com.ruben.balkanclickergame.domain.model.RegionalThemes
+import com.ruben.balkanclickergame.presentation.components.UpgradeCard
+import com.ruben.balkanclickergame.presentation.manager.GameEvent
 import com.ruben.balkanclickergame.presentation.viewmodels.HomeViewModel
 import com.ruben.balkanclickergame.presentation.viewmodels.ShopViewModel
+import com.ruben.balkanclickergame.presentation.viewmodels.UpgradeUiModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -41,11 +38,14 @@ import kotlin.random.Random
 @Composable
 fun DashboardScreen(
     homeViewModel: HomeViewModel,
-    shopViewModel: ShopViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    shopViewModel: ShopViewModel? = null
 ) {
     val gameState by homeViewModel.gameState.collectAsState()
-    val shopItems by shopViewModel.shopItems.collectAsState()
+    val currentEvent by homeViewModel.currentEvent
+    val shopItems by shopViewModel?.shopItems?.collectAsState() ?: remember { mutableStateOf(emptyList()) }
+
+    val regionalTheme = RegionalThemes.getThemeForLifetimeCoins(gameState.lifetimeCoins)
 
     DashboardContent(
         score = gameState.score,
@@ -55,11 +55,13 @@ fun DashboardScreen(
         lifetimeClicks = gameState.lifetimeClicks,
         prestigePoints = gameState.prestigePoints,
         prestigeMultiplier = gameState.prestigeMultiplier,
+        regionalTheme = regionalTheme,
+        currentEvent = currentEvent,
+        modifier = modifier.fillMaxSize(),
         shopItems = shopItems,
         onCoinClick = homeViewModel::onCoinClicked,
         onEmigrateClick = homeViewModel::onEmigrateClicked,
-        onBuyUpgrade = { upgradeId -> shopViewModel.purchaseUpgrade(upgradeId) },
-        modifier = modifier.fillMaxSize()
+        onBuyUpgrade = { shopViewModel?.purchaseUpgrade(it) }
     )
 }
 
@@ -72,11 +74,13 @@ fun DashboardContent(
     lifetimeClicks: Long,
     prestigePoints: Long,
     prestigeMultiplier: Double,
-    shopItems: List<UpgradeUiModel>,
+    regionalTheme: com.ruben.balkanclickergame.domain.model.RegionalTheme,
+    currentEvent: GameEvent,
+    modifier: Modifier = Modifier,
+    shopItems: List<UpgradeUiModel> = emptyList(),
     onCoinClick: () -> Unit,
     onEmigrateClick: () -> Unit,
-    onBuyUpgrade: (String) -> Unit,
-    modifier: Modifier = Modifier
+    onBuyUpgrade: (String) -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -87,7 +91,6 @@ fun DashboardContent(
         label = "CoinScale"
     )
 
-    // Manage floating text items
     val floatingTexts = remember { mutableStateListOf<FloatingTextItem>() }
 
     LazyColumn(
@@ -130,12 +133,23 @@ fun DashboardContent(
                     ),
                     shape = MaterialTheme.shapes.large
                 ) {
-                    Text(
-                        text = "$score",
-                        style = MaterialTheme.typography.displayLarge,
-                        fontWeight = FontWeight.Black,
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp)
-                    )
+                    ) {
+                        Text(
+                            text = "$score",
+                            style = MaterialTheme.typography.displayLarge,
+                            fontWeight = FontWeight.Black
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = regionalTheme.currencySymbol,
+                            style = MaterialTheme.typography.headlineLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Row {
@@ -170,7 +184,7 @@ fun DashboardContent(
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
                         ) {
                             Icon(
-                                imageVector = Icons.Rounded.MonetizationOn,
+                                imageVector = regionalTheme.currencyIcon,
                                 contentDescription = null,
                                 modifier = Modifier.size(16.dp)
                             )
@@ -188,6 +202,14 @@ fun DashboardContent(
 
         // Emigration Section
         if (lifetimeCoins >= 100000 || prestigePoints > 0) {
+            item {
+                Text(
+                    text = stringResource(R.string.section_prestige),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             item {
                 OutlinedCard(
                     modifier = Modifier.fillMaxWidth(),
@@ -221,6 +243,54 @@ fun DashboardContent(
             }
         }
 
+        // Event Banner
+        if (currentEvent !is GameEvent.None) {
+            item {
+                Text(
+                    text = stringResource(R.string.section_events),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            item {
+                AnimatedVisibility(
+                    visible = true,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut()
+                ) {
+                    val containerColor = if (currentEvent is GameEvent.Wedding) {
+                        MaterialTheme.colorScheme.primaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.errorContainer
+                    }
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = containerColor),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                        border = CardDefaults.outlinedCardBorder()
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(
+                                text = stringResource(
+                                    if (currentEvent is GameEvent.Wedding) R.string.event_wedding_title else R.string.event_inflation_title
+                                ),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = stringResource(
+                                    if (currentEvent is GameEvent.Wedding) R.string.event_wedding_desc else R.string.event_inflation_desc
+                                ),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
         // The Clickable Coin
         item {
             Box(
@@ -242,7 +312,6 @@ fun DashboardContent(
                             scale = 1f
                         }
 
-                        // Add floating text
                         val id = System.currentTimeMillis()
                         val xOffset = Random.nextInt(-100, 100).dp
                         val yOffset = Random.nextInt(-100, 100).dp
@@ -253,13 +322,12 @@ fun DashboardContent(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.MonetizationOn,
+                    imageVector = regionalTheme.currencyIcon,
                     contentDescription = stringResource(R.string.dashboard_coin_description),
                     modifier = Modifier.fillMaxSize(),
-                    tint = Color(0xFFFFD700) // Golden color
+                    tint = Color(0xFFFFD700)
                 )
 
-                // Render floating texts inside the coin's box so they are anchored to it
                 floatingTexts.forEach { item ->
                     key(item.id) {
                         FloatingText(
@@ -273,38 +341,25 @@ fun DashboardContent(
             }
         }
 
-        // Bazaar Header
-        item {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.ShoppingCart,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Spacer(modifier = Modifier.width(8.dp))
+        // Shop Section
+        if (shopItems.isNotEmpty()) {
+            item {
                 Text(
-                    text = stringResource(R.string.shop_title),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
+                    text = stringResource(R.string.section_upgrades),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
-            HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
+            items(shopItems, key = { it.upgrade.id }) { uiModel ->
+                UpgradeCard(
+                    uiModel = uiModel,
+                    onBuyClick = { onBuyUpgrade(uiModel.upgrade.id) }
+                )
+            }
         }
 
-        // Shop items
-        items(shopItems) { uiModel ->
-            UpgradeCard(
-                uiModel = uiModel,
-                onBuyClick = { onBuyUpgrade(uiModel.upgrade.id) }
-            )
-        }
-
-        // Lifetime Stats at the bottom
+        // Lifetime Stats
         item {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -385,72 +440,6 @@ fun FloatingText(
     )
 }
 
-@Composable
-fun UpgradeCard(
-    uiModel: UpgradeUiModel,
-    onBuyClick: () -> Unit
-) {
-    ElevatedCard(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = stringResource(uiModel.upgrade.nameResId),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = stringResource(R.string.shop_item_level, uiModel.currentLevel),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                }
-
-                Button(
-                    onClick = onBuyClick,
-                    enabled = uiModel.canAfford
-                ) {
-                    Text(stringResource(R.string.shop_item_buy, uiModel.currentCost))
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = stringResource(uiModel.upgrade.descriptionResId),
-                style = MaterialTheme.typography.bodyMedium
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row {
-                if (uiModel.upgrade.passiveIncomePerLevel > 0) {
-                    Text(
-                        text = stringResource(R.string.shop_item_passive_benefit, uiModel.upgrade.passiveIncomePerLevel),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(end = 16.dp)
-                    )
-                }
-                if (uiModel.upgrade.clickPowerPerLevel > 0) {
-                    Text(
-                        text = stringResource(R.string.shop_item_click_benefit, uiModel.upgrade.clickPowerPerLevel),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.tertiary
-                    )
-                }
-            }
-        }
-    }
-}
-
 @Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
 @Composable
 fun DashboardScreenPreview() {
@@ -463,30 +452,10 @@ fun DashboardScreenPreview() {
             lifetimeClicks = 120L,
             prestigePoints = 0,
             prestigeMultiplier = 1.0,
-            shopItems = emptyList(),
+            regionalTheme = com.ruben.balkanclickergame.domain.model.RegionalThemes.BGN,
+            currentEvent = GameEvent.None,
             onCoinClick = {},
-            onEmigrateClick = {},
-            onBuyUpgrade = {}
-        )
-    }
-}
-
-@Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,orientation=landscape")
-@Composable
-fun DashboardScreenTabletPreview() {
-    MaterialTheme {
-        DashboardContent(
-            score = 1250L,
-            clickPower = 10L,
-            passiveIncome = 5L,
-            lifetimeCoins = 5000L,
-            lifetimeClicks = 120L,
-            prestigePoints = 2,
-            prestigeMultiplier = 1.2,
-            shopItems = emptyList(),
-            onCoinClick = {},
-            onEmigrateClick = {},
-            onBuyUpgrade = {}
+            onEmigrateClick = {}
         )
     }
 }

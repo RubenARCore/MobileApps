@@ -29,7 +29,7 @@ class PurchaseUpgradeUseCaseTest {
         calculatePassiveIncomeUseCase,
         calculateClickPowerUseCase,
         CheckAchievementsUseCase(),
-        AchievementNotificationManager()
+        AchievementNotificationManager(mockk(relaxed = true))
     )
 
     @Test
