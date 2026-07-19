@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Балкански кликър</string>
+
+    <!-- Dashboard Screen -->
+    <string name="dashboard_title">Балкански Кликър</string>
+    <string name="dashboard_lifetime_stats">Обща статистика</string>
+    <string name="dashboard_total_earned">Общо спечелени: %1$d</string>
+    <string name="dashboard_total_clicks">Общо кликове: %1$d</string>
+    <string name="dashboard_coin_description">Монета</string>
+    <string name="dashboard_click_power_format">%1$d / клик</string>
+    <string name="dashboard_passive_income_format">%1$d / сек</string>
+    <string name="dashboard_floating_text_format">+%1$d</string>
+
+    <!-- Prestige -->
+    <string name="prestige_points_format">Престиж: %1$d точки</string>
+    <string name="prestige_multiplier_format">Бонус: x%1$.2f</string>
+    <string name="prestige_emigrate_button">Емигрирай в Германия</string>
+    <string name="prestige_emigrate_desc">Нулирай прогреса за постоянен бонус към дохода. (Нужни са 100к общо монети)</string>
+
+    <!-- Shop Screen -->
+    <string name="shop_title">Балкански базар</string>
+    <string name="shop_item_level">Ниво %1$d</string>
+    <string name="shop_item_buy">Купи (%1$d)</string>
+    <string name="shop_item_passive_benefit">+%1$d/сек</string>
+    <string name="shop_item_click_benefit">+%1$d на клик</string>
+
+    <!-- Upgrades -->
+    <string name="upgrade_rakija_name">Казан за ракия</string>
+    <string name="upgrade_rakija_desc">Произвежда фина сливова ракия. Увеличава пасивния доход.</string>
+    <string name="upgrade_baba_name">Съветът на баба</string>
+    <string name="upgrade_baba_desc">Мъдростта на баба прави кликовете ви по-ефективни.</string>
+    <string name="upgrade_kafana_name">Кафана</string>
+    <string name="upgrade_kafana_desc">Място за разговори и печалба. Приличен пасивен доход.</string>
+    <string name="upgrade_yugo_name">Сервиз за Юго</string>
+    <string name="upgrade_yugo_desc">Ремонт на легендите. Висок пасивен доход.</string>
+    <string name="upgrade_eurovision_name">Победа на Евровизия</string>
+    <string name="upgrade_eurovision_desc">Националната гордост подобрява всичко.</string>
+
+    <string name="upgrade_municipal_connections_name">Връзки в общината</string>
+    <string name="upgrade_municipal_connections_desc">Братовчед в общината намалява цената на всички подобрения с 5% на ниво.</string>
+    <string name="upgrade_it_nephew_name">Племенник ИТ</string>
+    <string name="upgrade_it_nephew_desc">Той \"разбира от компютри\". Клика вместо вас 2 пъти в секунда на ниво.</string>
+</resources>

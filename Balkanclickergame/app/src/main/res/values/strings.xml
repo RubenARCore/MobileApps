@@ -1,3 +1,43 @@
 <resources>
     <string name="app_name">Balkan clicker game</string>
+
+    <!-- Dashboard Screen -->
+    <string name="dashboard_title">Balkan Clicker</string>
+    <string name="dashboard_lifetime_stats">Lifetime Stats</string>
+    <string name="dashboard_total_earned">Total Earned: %1$d</string>
+    <string name="dashboard_total_clicks">Total Clicks: %1$d</string>
+    <string name="dashboard_coin_description">Coin</string>
+    <string name="dashboard_click_power_format">%1$d / tap</string>
+    <string name="dashboard_passive_income_format">%1$d / s</string>
+    <string name="dashboard_floating_text_format">+%1$d</string>
+
+    <!-- Prestige -->
+    <string name="prestige_points_format">Prestige: %1$d points</string>
+    <string name="prestige_multiplier_format">Boost: x%1$.2f</string>
+    <string name="prestige_emigrate_button">Emigrate to Germany</string>
+    <string name="prestige_emigrate_desc">Reset progress for a permanent income boost. (Need 100k lifetime coins)</string>
+
+    <!-- Shop Screen -->
+    <string name="shop_title">Balkan Bazaar</string>
+    <string name="shop_item_level">Level %1$d</string>
+    <string name="shop_item_buy">Buy (%1$d)</string>
+    <string name="shop_item_passive_benefit">+%1$d/s</string>
+    <string name="shop_item_click_benefit">+%1$d per click</string>
+
+    <!-- Upgrades -->
+    <string name="upgrade_rakija_name">Rakija Still</string>
+    <string name="upgrade_rakija_desc">Produces fine plum brandy. Increases passive income.</string>
+    <string name="upgrade_baba_name">Baba\'s Advice</string>
+    <string name="upgrade_baba_desc">Grandma\'s wisdom makes your clicks more effective.</string>
+    <string name="upgrade_kafana_name">Kafana</string>
+    <string name="upgrade_kafana_desc">A place to talk and earn. Decent passive income.</string>
+    <string name="upgrade_yugo_name">Yugo Service Station</string>
+    <string name="upgrade_yugo_desc">Fixing the legends. High passive income.</string>
+    <string name="upgrade_eurovision_name">Eurovision Victory</string>
+    <string name="upgrade_eurovision_desc">National pride boosts everything.</string>
+
+    <string name="upgrade_municipal_connections_name">Municipal Connections</string>
+    <string name="upgrade_municipal_connections_desc">A cousin in the city hall reduces all upgrade costs by 5% per level.</string>
+    <string name="upgrade_it_nephew_name">IT Nephew</string>
+    <string name="upgrade_it_nephew_desc">He \"knows computers\". Clicks for you 2 times per second per level.</string>
 </resources>

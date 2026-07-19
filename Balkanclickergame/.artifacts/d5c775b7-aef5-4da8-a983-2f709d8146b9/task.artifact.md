@@ -1,0 +1,6 @@
+- [x] Add string resources to `strings.xml`
+- [x] Refactor `Upgrade.kt` to use resource IDs
+- [x] Update `UpgradeRepositoryImpl.kt` with resource IDs
+- [x] Refactor `DashboardScreen.kt` to use `stringResource`
+- [x] Refactor `ShopScreen.kt` to use `stringResource`
+- [x] Verify build and tests
