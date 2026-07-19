@@ -13,7 +13,7 @@ import retrofit2.http.Query
 
 
 data class PexelsResponse(val photos: List<PexelsPhoto>)
-data class PexelsPhoto(val src: PexelsSource)
+data class PexelsPhoto(val src: PexelsSource, val alt: String? = null)
 data class PexelsSource(val large2x: String)
 
 interface PexelsService {
@@ -113,6 +113,7 @@ object AppStrings {
             "settings" -> "Настройки"
             "refresh" -> "Мотивирай"
             "phrase_title" -> "Мотивираща фраза"
+            "nature_title" -> "Природата Е Сила"
             "quote_title" -> "Цитат на деня"
             "fact_title" -> "Знаете ли, че...?"
             "habits_title" -> "Моите цели"
@@ -145,6 +146,7 @@ object AppStrings {
             "settings" -> "Settings"
             "refresh" -> "Refresh All"
             "phrase_title" -> "Motivational Phrase"
+            "nature_title" -> "Nature Is Power"
             "quote_title" -> "Quote of the Day"
             "fact_title" -> "Did you know...?"
             "habits_title" -> "My Goals"

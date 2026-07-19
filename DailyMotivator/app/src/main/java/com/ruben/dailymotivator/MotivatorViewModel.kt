@@ -30,12 +30,22 @@ class MotivatorViewModel(application: Application) : AndroidViewModel(applicatio
     private val _currentFact = MutableStateFlow<Fact?>(null)
     val currentFact: StateFlow<Fact?> = _currentFact.asStateFlow()
 
+    private val _natureImage = MutableStateFlow<String?>(null)
+    val natureImage: StateFlow<String?> = _natureImage.asStateFlow()
+
+    private val _natureDescription = MutableStateFlow<String?>(null)
+    val natureDescription: StateFlow<String?> = _natureDescription.asStateFlow()
+
     private val _backgroundImage = MutableStateFlow<String?>(null)
     val backgroundImage: StateFlow<String?> = _backgroundImage.asStateFlow()
 
     fun updateQuote(quote: Quote) { _currentQuote.value = quote }
     fun updatePhrase(phrase: Phrase) { _currentPhrase.value = phrase }
     fun updateFact(fact: Fact) { _currentFact.value = fact }
+    fun updateNatureInfo(url: String?, description: String?) { 
+        _natureImage.value = url 
+        _natureDescription.value = description
+    }
     fun updateBackgroundImage(url: String?) { _backgroundImage.value = url }
 
     fun addHabit(nameEn: String, nameBg: String) {

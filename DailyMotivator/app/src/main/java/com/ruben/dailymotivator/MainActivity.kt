@@ -547,7 +547,8 @@ fun HomeScreen(
     val currentQuote by vm.currentQuote.collectAsState()
     val currentPhrase by vm.currentPhrase.collectAsState()
     val currentFact by vm.currentFact.collectAsState()
-    val backgroundImage by vm.backgroundImage.collectAsState()
+    val natureImage by vm.natureImage.collectAsState()
+    val natureDescription by vm.natureDescription.collectAsState()
 
     val scope = rememberCoroutineScope()
     
@@ -578,13 +579,11 @@ fun HomeScreen(
 
         scope.launch {
             try {
-                // Fetch Image
-                val response = pexelsService.searchPhotos(PEXELS_API_KEY, "nature landscape", 15)
-                if (response.photos.isNotEmpty()) {
-                    val urls = response.photos.map { it.src.large2x }
-                    val nextUrl = urls.random()
-                    vm.updateBackgroundImage(nextUrl)
-                    vm.cacheImages(urls)
+                // Fetch Nature Landmark Image and Description for the card
+                val natureResponse = pexelsService.searchPhotos(PEXELS_API_KEY, "nature landmark", 15)
+                if (natureResponse.photos.isNotEmpty()) {
+                    val photo = natureResponse.photos.random()
+                    vm.updateNatureInfo(photo.src.large2x, photo.alt)
                 }
                 
                 // Fetch Quote
@@ -658,16 +657,24 @@ fun HomeScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (backgroundImage != null) {
-            AsyncImage(model = backgroundImage, contentDescription = null, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop, alpha = 0.6f)
-        } else {
-            Box(modifier = Modifier.fillMaxSize().background(Brush.verticalGradient(colors = listOf(Color(0xFF81D4FA), Color(0xFFC8E6C9)))))
-        }
+        // Updated Background: Constant Gradient instead of Image
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFFE3F2FD), // Soft Light Blue
+                            Color(0xFFF1F8E9)  // Soft Light Green
+                        )
+                    )
+                )
+        )
 
         Column(
-            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
+            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             if (currentPhrase != null) {
                 InfoCard(
@@ -681,6 +688,13 @@ fun HomeScreen(
                     onShare = { shareText(context, currentPhrase!!.text) }
                 )
             }
+
+            NatureCard(
+                language = language,
+                imageUrl = natureImage,
+                description = natureDescription,
+                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
+            )
 
             if (currentQuote != null) {
                 QuoteCard(
@@ -711,7 +725,7 @@ fun HomeScreen(
                 onClick = { updateContent() },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(64.dp),
+                    .height(56.dp),
                 contentPadding = PaddingValues(0.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 shape = RoundedCornerShape(20.dp),
@@ -741,7 +755,7 @@ fun HomeScreen(
                             fontWeight = FontWeight.ExtraBold,
                             letterSpacing = 2.sp,
                             color = Color.White,
-                            fontSize = 18.sp
+                            fontSize = 16.sp
                         )
                     }
                 }
@@ -990,11 +1004,69 @@ fun HabitCard(lang: Language, habits: List<Habit>, streak: Int, onAdd: (String, 
 }
 
 @Composable
+fun NatureCard(language: Language, imageUrl: String?, description: String?, containerColor: Color) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(160.dp),
+        shape = RoundedCornerShape(32.dp),
+        colors = CardDefaults.cardColors(containerColor = containerColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (imageUrl != null) {
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            
+            // Overlaid title
+            Surface(
+                color = Color.Black.copy(alpha = 0.6f),
+                shape = RoundedCornerShape(topEnd = 0.dp, bottomEnd = 24.dp, topStart = 0.dp, bottomStart = 0.dp),
+                modifier = Modifier.align(Alignment.TopStart)
+            ) {
+                Text(
+                    text = AppStrings.get(language, "nature_title").uppercase(),
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 10.sp,
+                    color = Color.White,
+                    letterSpacing = 1.sp,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                )
+            }
+
+            // Description overlay in bottom left
+            if (!description.isNullOrBlank()) {
+                Surface(
+                    color = Color.Black.copy(alpha = 0.4f),
+                    shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 0.dp, topStart = 0.dp, bottomStart = 0.dp),
+                    modifier = Modifier.align(Alignment.BottomStart)
+                ) {
+                    Text(
+                        text = description,
+                        fontSize = 10.sp,
+                        color = Color.White.copy(alpha = 0.9f),
+                        fontStyle = FontStyle.Italic,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        maxLines = 1
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun InfoCard(title: String, content: String, icon: ImageVector, isFavorite: Boolean, onToggleFavorite: () -> Unit, containerColor: Color, onCopy: () -> Unit, onShare: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 150.dp),
+            .heightIn(min = 120.dp),
         shape = RoundedCornerShape(32.dp),
         colors = CardDefaults.cardColors(containerColor = containerColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
@@ -1031,7 +1103,7 @@ fun QuoteCard(language: Language, quote: Quote, isFavorite: Boolean, onToggleFav
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 180.dp),
+            .heightIn(min = 140.dp),
         shape = RoundedCornerShape(32.dp),
         colors = CardDefaults.cardColors(containerColor = containerColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
