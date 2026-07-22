@@ -8,11 +8,30 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import com.google.mlkit.nl.translate.TranslateLanguage
+import com.google.mlkit.nl.translate.Translation
+import com.google.mlkit.nl.translate.TranslatorOptions
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MotivatorViewModel(application: Application) : AndroidViewModel(application) {
     private val dao = AppDatabase.getDatabase(application).motivatorDao()
+
+    private val translatorOptions = TranslatorOptions.Builder()
+        .setSourceLanguage(TranslateLanguage.ENGLISH)
+        .setTargetLanguage(TranslateLanguage.BULGARIAN)
+        .build()
+    private val translator = Translation.getClient(translatorOptions)
+
+    init {
+        translator.downloadModelIfNeeded()
+            .addOnSuccessListener {
+                // Model downloaded or already present
+            }
+            .addOnFailureListener {
+                // Handle download failure
+            }
+    }
 
     val allHabits: Flow<List<Habit>> = dao.getAllHabits()
     val allMissions: Flow<List<DailyMission>> = dao.getActiveMissions() 
@@ -42,11 +61,27 @@ class MotivatorViewModel(application: Application) : AndroidViewModel(applicatio
     fun updateQuote(quote: Quote) { _currentQuote.value = quote }
     fun updatePhrase(phrase: Phrase) { _currentPhrase.value = phrase }
     fun updateFact(fact: Fact) { _currentFact.value = fact }
-    fun updateNatureInfo(url: String?, description: String?) { 
+    fun updateNatureInfo(url: String?, description: String?, targetLang: String) { 
         _natureImage.value = url 
-        _natureDescription.value = description
+        if (targetLang == "BG" && !description.isNullOrBlank()) {
+            _natureDescription.value = "Превеждам..."
+            translator.translate(description)
+                .addOnSuccessListener { translatedText ->
+                    _natureDescription.value = translatedText
+                }
+                .addOnFailureListener {
+                    _natureDescription.value = description
+                }
+        } else {
+            _natureDescription.value = description
+        }
     }
     fun updateBackgroundImage(url: String?) { _backgroundImage.value = url }
+
+    override fun onCleared() {
+        super.onCleared()
+        translator.close()
+    }
 
     fun addHabit(nameEn: String, nameBg: String) {
         viewModelScope.launch {

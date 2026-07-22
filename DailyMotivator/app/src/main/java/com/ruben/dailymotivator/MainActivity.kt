@@ -583,7 +583,7 @@ fun HomeScreen(
                 val natureResponse = pexelsService.searchPhotos(PEXELS_API_KEY, "nature landmark", 15)
                 if (natureResponse.photos.isNotEmpty()) {
                     val photo = natureResponse.photos.random()
-                    vm.updateNatureInfo(photo.src.large2x, photo.alt)
+                    vm.updateNatureInfo(photo.src.large2x, photo.alt, language.name)
                 }
                 
                 // Fetch Quote
